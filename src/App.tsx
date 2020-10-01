@@ -1,26 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react'
+// Pages
+import Start from './pages/Start'
+import Home from './pages/Home'
+import UiComponents from './pages/UiComponents'
+// My context
+import MyContext, { IDefaultContext } from './context'
+// Reach router
+import { Router, RouteComponentProps } from '@reach/router'
+// Routes
+const StartPage = (props: RouteComponentProps) => <Start />
+const HomePage = (props: RouteComponentProps) => <Home />
+const UiComponentsPage = (props: RouteComponentProps) => <UiComponents />
 
 function App() {
+  const [isLogin, setIsLogin] = useState(false)
+
+  const appContext: IDefaultContext = {
+    isLogin, 
+    setIsLogin: (value: boolean) => setIsLogin(value)
+  }
+
+  useEffect(() => {    
+    //console.log(`is login`, isLogin)
+  }, [isLogin])
+
+  /*if (isLogin) {
+    return <Redirect to='home/*' noThrow />
+  }*/
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <MyContext.Provider value={appContext}>
+      <Router>
+        <StartPage path='/'/>
+        <HomePage path='home/*' />
+        <UiComponentsPage path='ui' />
+      </Router>
+    </MyContext.Provider>
+  )
 }
 
-export default App;
+export default App
